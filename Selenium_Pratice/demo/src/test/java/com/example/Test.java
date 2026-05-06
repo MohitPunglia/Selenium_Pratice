@@ -1,5 +1,7 @@
 package com.example;
 
+import org.junit.Assert;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,7 +21,7 @@ public class Test {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
         WebDriverWait wait = new WebDriverWait(driver, 5);
-        driver.get("https://demoqa.com/browser-windows");
+        driver.get("https://demoqa.com/alerts");
 
         // -------------Below code is for Checkbox----------
         // driver.get("https://demoqa.com/checkbox");
@@ -136,18 +138,56 @@ public class Test {
 
         // https://demoqa.com/browser-windows
 
-        String parentWindow = driver.getWindowHandle();
-        driver.findElement(By.id("tabButton")).click();
-        Set<String> childWindow = driver.getWindowHandles();
+        // String parentWindow = driver.getWindowHandle();
+        // driver.findElement(By.id("tabButton")).click();
+        // Set<String> childWindow = driver.getWindowHandles();
 
-        for (String window : childWindow) {
-            if (!window.equals(parentWindow)) {
-                driver.switchTo().window(window);
-                break;
-            }
-        }
-        System.out.println("Title of Window is ---->" + driver.getTitle());
-        driver.close();
-        driver.switchTo().window(parentWindow);
+        // for (String window : childWindow) {
+        // if (!window.equals(parentWindow)) {
+        // driver.switchTo().window(window);
+        // break;
+        // }
+        // }
+        // System.out.println("Title of Window is ---->" + driver.getTitle());
+        // driver.close();
+        // driver.switchTo().window(parentWindow);
+
+        // https://demoqa.com/modal-dialogs
+
+        // driver.findElement(By.id("showSmallModal")).click();
+        // wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("modal-content")));
+        // String text = driver.findElement(By.className("modal-body")).getText();
+        // System.out.println(text);
+        // driver.findElement(By.id("closeSmallModal")).click();
+        // System.out.println("************** Running 2nd Test ************");
+        // driver.findElement(By.id("showLargeModal")).click();
+        // wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("modal-content")));
+        // String largeText =
+        // driver.findElement(By.xpath("//*[@class='modal-body']/p")).getText();
+        // System.out.println(largeText);
+        // driver.findElement(By.id("closeLargeModal")).click();
+
+        // https://demoqa.com/alerts
+
+        driver.findElement(By.id("alertButton")).click();
+        driver.switchTo().alert().accept();
+
+        driver.findElement(By.id("timerAlertButton")).click();
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        System.out.println("Text is " + alert.getText());
+        alert.accept();
+
+        driver.findElement(By.id("confirmButton")).click();
+        driver.switchTo().alert().accept();
+        String acceptText = driver.findElement(By.id("confirmResult")).getText();
+        System.out.println("Accept Text is ===> " + acceptText);
+        Assert.assertEquals(acceptText, "You selected Ok");
+
+        driver.findElement(By.id("confirmButton")).click();
+        driver.switchTo().alert().dismiss();
+        String dismissText = driver.findElement(By.id("confirmResult")).getText();
+        System.out.println("Dismiss Text is ===> " + dismissText);
+        Assert.assertEquals(dismissText, "You selected Cancel");
+
     }
 }
